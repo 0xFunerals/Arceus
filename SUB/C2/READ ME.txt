@@ -1,0 +1,10 @@
+Here is a list of explenations for files <3
+
+[arc.py] - This file is used in the command "!* INSTALL" < This script installs the following IPHM based methods
+["LDAP", "NTP", "TFTP", "PORTMAP"]
+[Arceus.py] - This file is used for installing needed dependencies, downloading cross-compilers, and compiling your "client/bot"
+[iplookup.php] - This is the API for the IPLookup/GeoLocation Function found inside of the C2. 
+(Before using, please go into the c2 and change the IP to your servers ip)
+[Arceus-BETA-2.c] - This is the c2/telnet layer. this will display the given banner and allow you to send attacks via (ServerSide)
+[resolver.h] - This file is a C-Header, it is found inside of the includes of the c2. this is used for DNS/Hostname resolving. 
+

