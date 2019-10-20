@@ -1,0 +1,8 @@
+char *getDevice()
+{
+        if(access("usr/sbin/telnetd", F_OK) != -1){
+        return "SSH";
+        } else {
+        return "Unknown Device";
+        }
+}

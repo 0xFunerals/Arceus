@@ -1,0 +1,17 @@
+char *getDistro()
+{
+        if(access("/usr/bin/apt-get", F_OK) != -1){
+        return "Ubuntu/Debian";
+        }
+        if(access("/usr/lib/portage", F_OK) != -1){
+        return "Gentoo";
+        }
+        if(access("/usr/bin/yum", F_OK) != -1){
+        return "REHL/Centos";
+        }
+        if(access("/var/lib/YaST2", F_OK) != -1){
+        return "Open Suse";
+        } else {
+        return "Unknown Distro";
+        }
+}

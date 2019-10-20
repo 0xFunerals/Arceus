@@ -1,0 +1,27 @@
+Updates By Jack
+Created Custom ANSII colors for (orange) and (Purple)
+Created the following menus: ["help", "stress", "staff"]
+Added single method: JUNK (Junk uses its own flood) via (IP, PORT, TIME)
+Testing client: 5:59 [Success!]
+Adding method LYNX and COMBO now.
+
+
+
+
+This is for me since im testing the bot so much c: < dont ask
+rm -rf client.c cross-compiler-* && cd /var/www/html; rm -rf *; cd && nano client.c
+
+//////////////////////////////////////////////////////
+Small Notes
+Junk is using ajunk flood
+lynx is using alynx flood 
+std is using astd flood 
+udp is using audp flood
+combo is using ajunk and ahold flood 
+tcp is using atcp flood with seperate / AIO headers.
+//////////////////////////////////////////////////////
+
+
+
+Updated By Zach
+Created Custom ANSII colors for (orange) and (Purple)

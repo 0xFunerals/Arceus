@@ -1,0 +1,23 @@
+1: Make the loading the same as katura                                            || Completed on [3/27/19]
+2: remove all color codes                                                         || Completed on [3/25/19]
+3: copy attack menu from katura                                                   || Task No Longer In Use!
+4: copy katura banner for zachs replacement                                       || Task No Longer In Use!
+5: add methods UDP, TCP, STD, JUNK, COMBO, LYNX                                   || Completed on [3/27/19]
+6: fix defined STD packetsize and add PacketSize into methods                     || Completed on [3/27/19]
+7: create custom  ANSII colors for (orange) and (purple)                          || Completed on [3/25/19]
+8: work on STD Strings
+9: Test new methods and log errors + output
+10: make new banners, finish menus inside of arceus
+11: fix STD Strings (testing)
+12: implement methods based over IP Header Modifications (Ampliifcations)
+13: Work on bot stabability
+14: add new sections for seperate methods
+15: fix stress menu (add suggested options)
+16: Add ARM Payload to client
+17: Add MIPS Payload to client
+18: Add x86 Payload to Client
+19: Add MIPSEL Payload to Client
+20: Finish the Arceus Autosetup
+21: Fix System Detection void >
+22: Create new menu banners for main menu and alternative menus
+23: Fix info section ( User information is pushing out the menu (font))

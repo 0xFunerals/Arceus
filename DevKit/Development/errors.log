@@ -1,0 +1,42 @@
+/tmp/ccOde4O2.o: In function `alynx':
+client.c:(.text+0x4318): undefined reference to `findRandIP'
+client.c:(.text+0x45fc): undefined reference to `findRandIP'
+/tmp/cc2nGhWp.o: In function `alynx':
+client.c:(.text+0x4300): undefined reference to `findRandIP'
+client.c:(.text+0x45dc): undefined reference to `findRandIP'
+/tmp/ccGb0g6M.o: In function `alynx':
+client.c:(.text+0x2fbc): undefined reference to `findRandIP'
+client.c:(.text+0x3174): undefined reference to `findRandIP'
+client.c: In function 'print':
+client.c:413: warning: cast to pointer from integer of different size
+/tmp/ccUpWyy8.o: In function `alynx':
+client.c:(.text+0x25df): undefined reference to `findRandIP'
+client.c:(.text+0x275a): undefined reference to `findRandIP'
+/tmp/ccQg5FAm.o: In function `astd':
+client.c:(.text+0x27c4): warning: gethostbyname is obsolescent, use getnameinfo() instead.
+/tmp/ccQg5FAm.o: In function `alynx':
+client.c:(.text+0x2f74): undefined reference to `findRandIP'
+client.c:(.text+0x31c0): undefined reference to `findRandIP'
+/tmp/ccsiNkHj.o: In function `alynx':
+client.c:(.text+0x220a): undefined reference to `findRandIP'
+client.c:(.text+0x2389): undefined reference to `findRandIP'
+/tmp/ccqSHDkw.o: In function `alynx':
+client.c:(.text+0x32e8): undefined reference to `findRandIP'
+client.c:(.text+0x34b4): undefined reference to `findRandIP'
+/tmp/ccAmil2N.o: In function `alynx':
+client.c:(.text+0x1fe0): undefined reference to `findRandIP'
+client.c:(.text+0x214b): undefined reference to `findRandIP'
+/tmp/ccYxzry3.o: In function `alynx':
+client.c:(.text+0x223a): undefined reference to `findRandIP'
+client.c:(.text+0x23c0): undefined reference to `findRandIP'
+/tmp/ccqHKDeh.o: In function `alynx':
+client.c:(.text+0x3338): undefined reference to `findRandIP'
+client.c:(.text+0x354c): undefined reference to `findRandIP'
+/tmp/ccE3Rwgv.o: In function `alynx':
+client.c:(.text+0x2ff4): undefined reference to `findRandIP'
+client.c:(.text+0x3218): undefined reference to `findRandIP'
+/tmp/ccwyTfFI.o: In function `alynx':
+client.c:(.text+0x2ff4): undefined reference to `findRandIP'
+client.c:(.text+0x3218): undefined reference to `findRandIP'
+================================================================
+23.254.244.244

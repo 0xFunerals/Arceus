@@ -1,0 +1,14 @@
+char *getFiles()
+{
+        if(access("/usr/bin/python", F_OK) != -1){
+        return "Python";
+        }
+        if(access("/usr/bin/python3", F_OK) != -1){
+        return "Python3";
+        }
+        if(access("/usr/bin/perl", F_OK) != -1){
+        return "Perl";
+                } else {
+        return "Unknown File";
+        }
+}

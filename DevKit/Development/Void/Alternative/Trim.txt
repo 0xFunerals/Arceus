@@ -1,0 +1,13 @@
+void trim(char *str)
+{
+        int i;
+        int begin = 0;
+        int end = strlen(str) - 1;
+
+        while (isspace(str[begin])) begin++;
+
+        while ((end >= begin) && isspace(str[end])) end--;
+        for (i = begin; i <= end; i++) str[i - begin] = str[i];
+
+        str[i - begin] = '\0';
+}

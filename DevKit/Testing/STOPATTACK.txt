@@ -1,0 +1,17 @@
+        if(!strcmp(argv[0], "STOP"))
+        {
+                int killed = 0;
+                unsigned long i;
+                for (i = 0; i < numpids; i++) {
+                        if (pids[i] != 0 && pids[i] != getpid()) {
+                                kill(pids[i], 9);
+                                killed++;
+                        }
+                }
+
+                if(killed > 0)
+                {
+                } else {
+                }
+        }
+}

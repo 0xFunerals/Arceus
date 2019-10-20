@@ -1,0 +1,31 @@
+char *getArch() {
+    #if defined(__x86_64__) || defined(_M_X64)
+    return "x86_64";
+    #elif defined(i386) || defined(__i386__) || defined(__i386) || defined(_M_IX86)
+    return "x86_32";
+    #elif defined(__ARM_ARCH_2__) || defined(__ARM_ARCH_3__) || defined(__ARM_ARCH_3M__) || defined(__ARM_ARCH_4T__) || defined(__TARGET_ARM_4T)
+    return "Arm4";
+    #elif defined(__ARM_ARCH_5_) || defined(__ARM_ARCH_5E_)
+    return "Arm5"
+    #elif defined(__ARM_ARCH_6T2_) || defined(__ARM_ARCH_6T2_) ||defined(__ARM_ARCH_6__) || defined(__ARM_ARCH_6J__) || defined(__ARM_ARCH_6K__) || defined(__ARM_ARCH_6Z__) || defined(__ARM_ARCH_6ZK__) || defined(__aarch64__)
+    return "Arm6";
+    #elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || defined(__ARM_ARCH_7S__)
+    return "Arm7";
+    #elif defined(mips) || defined(__mips__) || defined(__mips)
+    return "Mips";
+    #elif defined(mipsel) || defined (__mipsel__) || defined (__mipsel) || defined (_mipsel)
+    return "Mipsel";
+    #elif defined(__sh__)
+    return "Sh4";
+    #elif defined(__powerpc) || defined(__powerpc__) || defined(__powerpc64__) || defined(__POWERPC__) || defined(__ppc__) || defined(__ppc64__) || defined(__PPC__) || defined(__PPC64__) || defined(_ARCH_PPC) || defined(_ARCH_PPC64)
+    return "Ppc";
+    #elif defined(__sparc__) || defined(__sparc)
+    return "spc";
+    #elif defined(__m68k__)
+    return "M68k";
+    #elif defined(__arc__)
+    return "Arc";
+    #else
+    return "Unknown Architecture";
+    #endif
+}

