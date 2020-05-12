@@ -4,3 +4,6 @@ Partial development by Zach - Transmissional
 
 - Infamous Bashlite source known as 'Arceus'
 - IPHM Implementation (API Usage) - Direct Server Commands using IPHM Based methods (Amplifications)
+- Heavily Modified Connection Handler
+- Updated "Bot"
+- Updated Methods - Marked for switchup
