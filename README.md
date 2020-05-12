@@ -7,3 +7,6 @@ Partial development by Zach - Transmissional
 - Heavily Modified Connection Handler
 - Updated "Bot"
 - Updated Methods - Marked for switchup
+- Updated Auto-Setup in Python
+
+- i cant be fucked to explain everything. enjoy.
